@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Document</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            padding-left: 10px;
+        }        
+    </style>
+</head>
+<body>
+    <div>
+        <h1>web api2</h1>
+        <ou>            
+            <img src="images/image2.png" width="70%" height="70%" alt="image2">
+            <br><br>
+            
+            <li type="1">the first four sections are theory, conceptually how the web api works and their advantages</li>
+            <li type="1">the next three section, it is code part to implement the above theory section</li>
+
+            <br>
+            <img src="images/image3.png" width="70%" height="70%" alt="image3">
+            <br><br>
+
+            <li type="1">what is web api2: there is no need to have knowledge of webapi1 to learn webapi2</li>            
+            <li type="1">web api is a general term, it can be developed in java, php, or any toehr server side language</li>
+            <li type="1">here we are learning using microsoft framework how we are going to learn web api and it is called asp.net web api</li>
+            <li type="1">web api is used to create http services</li>
+            <li type="1">web api is split into two layers</li>
+            <li type="1">--> (a) client</li>
+            <li type="1">--> (b) server</li>
+            <li type="1">what is there in Client layer: desktop applications, mobie application, web browser etc (any devices)</li>
+            <li type="1">from client using http:// protocol a request is sent to server (http request is sent)</li>
+            <li type="1">server accepts and responds to the request in the from of XML, 
+                json, other format (csv, tsv, etc.) (http response is sent) </li>
+            <li type="1">in microsoft technology, we had wcf having the same functionality</li>
+            <li type="1">then what is the different between wcf and web api, there it self we could have called a http service and yes, it is possible to create web api</li>
+            <li type="1">wcf can be called as the first version of web api, but web api 2 has advanced features</li>
+            <li type="1">Http Request: http://servername/apiname?id=10</li>
+            <li type="1">Http Response: = { "Name": "xyz", "Age": "45" }    <-- this is json format</li>
+            <li type="1">if a request and response works using http, then it is a restful service</li>
+            <li type="1">restful service is a architectural pattern</li>
+            
+            <br>
+            <img src="images/image4.png" width="70%" height="70%" alt="image4">
+            <br><br>
+
+            <li type="1">using http protocol a service can be called, for different clients the reponse from the server will be the same</li>
+            <li type="1">when compared to wcf what are the adventages of using webapi</li>
+            <li type="1">--> content negotiation: a service can give xml, json, csv, tsv etc. format and for the same service to return 
+                different output we need to write separate code and need to be returned speratately
+            </li>
+            <li type="1">using content negotiation concept if client tell that it needs xml as output, it will return the content in xml format</li>
+            <li type="1">similarly if client request for json, it will return the content in json format</li>
+            <li type="1">--> web api is light weight frame work for api development, in previous framework to process a request there used to 
+                be many components (request passes through many component ie. wcf) </li>
+            <li type="1">but in web api the architecture/pipeline is very simple</li>
+            <li type="1">--> web api supports different formats of response data (built in support for xml, json and custom data can also be 
+                built)</li>
+            <li type="1">--> restful services can be creted in wcf also, but lots of configuration are required in wcf web.config here in webapi
+                this is not required (it is much simplified)
+            </li>
+            <li type="1">--> in web api we will be creating methods for GET, PUT, POST, DELETE (all these verbs will be automatically mapped)</li>
+            <li type="1">how, where and why it will be auto mapped will be seens in later code</li>
+            <li type="1">--> all the above are advantages of web api, lets see the advantages of web api2</li>
+            <li type="1">--> attribute based routing: to understand this we need to know what is routing, what is attribute and then we 
+                can understand how routing happens based on attribute
+            </li>
+            <li type="1">--> in built cors implement (cors can just be enabled and disbaled in web api 2)</li>
+             
+            <br>
+            <img src="images/image5.png" width="70%" height="70%" alt="image5">
+            <br><br>
+
+            <li type="1">web api also has a disadvantage: when workign with wcf binding is possible with tcp, msmq, http, etc
+                but with web api is it not possible. only HTTP protocol is supported
+            </li>
+
+            <br>
+            <img src="images/image6.png" width="70%" height="70%" alt="image6">
+            <br><br>
+
+            <br>
+            <img src="images/image7.png" width="70%" height="70%" alt="image7">
+            <br><br>
+
+            <li type="1">--> a HTTP client request for a data, this request reaches web api controller</li>
+            <li type="1">--> the web api controller will give the response back to the HTTP client</li>
+            <li type="1">this is the basic pipeline</li>
+            <li type="1">--> over all, different clients will connect to web api and the single service will respond back to 
+                all the clients</li>
+            <li type="1">Now lets see a simple web api implementation</li>
+            <li type="1">refer the project (PP.WebAPI2)</li>
+            <li type="1">create a empty application and then select (web api), a project will be created with basic files</li>
+            
+            <br>
+            <img src="images/image1.png" alt="image1">
+            <br><br>
+
+            <li type="1">below is the structure of the solution, even though there are many folders files are present in only two 
+                folders. the files are WebApiConfig.cs and Global.asax.cs
+            </li>
+            
+            <li type="1">in the above if we have not selected the web api check box then these two files also would not 
+                have been created</li>
+            <li type="1">--> in global.asax, we have application_start() event which will be fired only once</li>
+            <li type="1">--> inside this we are registering the webapiconfig, then what is the advantage of registration</li>
+            <li type="1">--> right click on register and go to definition, this will go to webapiconfig.cs file inside app_start folder</li>
+            <li type="1">there is a line called: config.MapHttpAttributeRoutes();</li>
+            <li type="1">this line is there because we are using webapi2, in webapi1 the above line is not there</li>
+            <li type="1">not lets focus on controller and we will go to the controller folder</li>
+            <li type="1">all the codes that we write should be inside the controller folder</li>
+            <li type="1">lets create the first controller, right click the controller folder add --> controller</li>
+            <li type="1">add scaffold, dialog will open as below and select the Web API 2 Controller - Empty</li>
+
+            <br>
+            <img src="images/image8.png" width="70%" height="70%" alt="image8">
+            <br><br>
+
+            <li type="1">why do we use these controllers, each and every service called from client (getBookDetails, updateEmployeeDetails etc..)</li>
+            <li type="1">and all these methods will be defined inside the controller</li>
+            <li type="1">in short web api login is written in controller</li>
+            <li type="1">lets name the first controller as DemoController</li>
+            <li type="1">the first DemoController is ready</li>
+
+            <br>
+            <img src="images/image9.png" width="70%" height="70%" alt="image9">
+            <br><br>
+
+            <li type="1">the DemoController is inherited from ApiController</li>
+            <li type="1">ApiController is the based for web api</li>
+            <li type="1">all the web api's that we will be creating will be extended from ApiController class</li>
+            <li type="1">it is mandatory that webapi controller should be defined from ApiController</li>
+            <li type="1">the first opertion in service is: GetMyName()</li>
+            <li type="1">(a) create a simple function (calling this service will return the string "welcome to web api 2"</li>
+            <li type="1">(b) now a simple service is created, lets call the service (run the application) </li>
+
+            <br>
+            <img src="images/image10.png" width="70%" height="70%" alt="image10">
+            <br><br>
+
+            <li type="1">in browser, enter the command: http://localhost:44391/api/demo/GetMyName</li>
+
+            <br>
+            <img src="images/image11.png" width="70%" height="70%" alt="image11">
+            <br><br>
+
+            <li type="1">multiple questions should arise now, in url why are we giving api, demo and how can we call the 
+                method GetMyName() directly from url
+            </li>
+            <li type="1">calling a method, directly from the browser is called as HTTP services</li>
+            <li type="1">http://localhost:44391 (this called domain)</li>
+            <li type="1">api/demo/GetMyName (this is called root)</li>
+            <li type="1">which means root is pointing to the serivce or how it matches the service</li>
+            <li type="1">the answer is available in webapiconfig.cs file</li>
+            <li type="1">which has a line called: routeTemplate: </li>
+            <li type="1">
+                config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            </li>
+            <li type="1">the above is the classic routing mechanism that we are using from web api1</li>
+            <li type="1">name: can be any user defined name</li>
+            <li type="1">routeTemplate: (very important) "api/{controllerName}/{parameter}"</li>
+            <li type="1">this patter will match with the pattern of the root</li>
+            <li type="1">all the controllers will end with controller, it is possible to change or remove the controller name but for that lost 
+                of lines of cofde is required</li>
+            <li type="1">now in the browser if we get the method name and call the service as: http://localhost:44391/api/demo/</li>
+            <li type="1">then also we will get the output. (in a browser the default method is get method, but we have no where specified it as 
+                the get method, then how it is going)
+            </li>
+            <li type="1">this is the tricky part of asp.net web api framework</li>
+            <li type="1">in a controller if any of the method starts with GetMyName, GetXYZ, GetABC etc.. by looking at the Get in the method Name
+                it will assume it as root
+            </li>
+            <li type="1">lets assume we change the method name from GetMyName to PostMyName and in the address bar if we type as 
+                http://localhost:44391/api/demo/ then it will not work</li>
+            <li type="1">it is the intelligence of the web api, by reading the method name it will identify whether it is a GET, POST, PUT, DELETE</li>
+            <li type="1">Lets see a new tool: fiddler</li>
+            <li type="1">open fiddler, and execute 'start' command from fiddler console and open browser and hit the url: http://localhost:44391/api/demo/</li>
+            <li type="1">give stop command, once our response is captured by the fiddler</li>
+            <li type="1">fiddler will help to view the request we gave and the response it captured</li>
+            <li type="1">in (Inspector) tab we can see all the information</li>
+
+            <br>
+            <img src="images/image12.png" width="100%" height="100%" alt="image12">
+            <br><br>
+
+            <li type="1">In header part we can see the, content-type: application/xml</li>
+            <li type="1">this means the request is passed for an XML response, hence if we go to the XML tab we can see the response as XML</li>
+
+            <br>
+            <img src="images/image13.png" width="100%" height="100%" alt="image13">
+            <br><br>
+
+            <li type="1">we can go to compose and give the same request here also</li>
+
+            <br>
+            <img src="images/image14.png" width="100%" height="100%" alt="image14">
+            <br><br>
+
+            <li type="1">In the (Parsed) tab, Select the verb as (GET) and enter the url and hit the (Execute) button</li>
+            <li type="1">So why do we use fiddler, when browser is able to display the GET result. Browser will not support, PUT, POST, DELETE request etc.</li>
+            <li type="1">to validate we may need to create a new test client application, to save time we are using one of the well established tool - fiddler</li>
+            <li type="1">In the (COMPOSE) tab, just by selecting the required verb we can perform needed action link GET, PUT, POST and DELETE</li>
+            <li type="1">Web API is server implementation and calling can be done from web brower, mobile application, desktop application like fiddler or any client</li>
+
+            <br>
+            <img src="images/image15.png" width="100%" height="100%" alt="image15">
+            <br><br>
+
+            <li type="1">we can see that the response received is: 200, the return type is: json</li>
+
+            <br>
+            <img src="images/image16.png" width="100%" height="100%" alt="image16">
+            <br><br>
+
+            <li type="1">we can see that json tab has the response out</li>
+            <li type="1">lets go the composer tab and in header section enter: Content-type:application/json and hit execute</li>
+            <li type="1">we can see the 200 response from server and the return type is json</li>
+
+            <br>
+            <img src="images/image17.png" width="100%" height="100%" alt="image17">
+            <br><br>
+
+            <li type="1">similarly if we update the content-type to (Content-type:application/xml) and hit execute button</li>
+            <li type="1">we can see the 200 response from server and the return type is xml</li>
+
+            <br>
+            <img src="images/image18.png" width="100%" height="100%" alt="image18">
+            <br><br>
+
+            <br>
+            <img src="images/image19.png" width="100%" height="100%" alt="image19">
+            <br><br>
+
+            <li type="1">First advantage: In web api code we have not specified any thing, just a string is returned. from the calling client if we tell
+                we need xml, the output we are receiving is in xml format. again from the client if we tell we need the output in json format, we are 
+                receiving the data in json format</li>
+            <li type="1">this conversion part is automatically handled by web-api (this we can understand when we see pipeline)</li>
+            <li type="1">based on the request type web-api is sending data to the client in requeted format (now point 2 in advantages slide will be clear)</li>
+            <li type="1">till now we have not written any complex function, we have just created a three function and calling from fiddler is works</li>
+            <li type="1">automatically by looking the method name (GET****) it binds the method to GET verb</li>
+            <li type="1">now lets create one more method GetKeyWords()</li>
+            <li type="1">now the question arises, since there are more that 1 get how web api will behave, we will get the error as "multiple entry points"</li>
+
+            <br>
+            <img src="images/image20.png" width="70%" height="70%" alt="image20">
+            <br><br>
+
+            <li type="1">from fiddler compose call the url: http://localhost:44391/api/demo/</li>
+
+            <br>
+            <img src="images/image21.png" width="70%" height="70%" alt="image21">
+            <br><br>
+
+            <br>
+            <img src="images/image22.png" width="70%" height="70%" alt="image22">
+            <br><br>
+
+            <li type="1">Due to multiple Get methods in DemoController it is unable to locate the Route, to resolve this error the solution is</li>
+            <li type="1">on top of the method, decorate with verb like: [HttpGet]</li>
+            <li type="1">this is the recommended method to delcare a verb</li>
+            <li type="1">After verb give the route as: [Route ("api/Demo/GetString")]</li>
+            <li type="1">similary specify the route for the other method also: [Route ("api/Demo/GetKeyWords")]</li>
+            <li type="1">now run the application</li>
+
+            <br>
+            <img src="images/image23.png" width="70%" height="70%" alt="image23">
+            <br><br>
+
+            <li type="1">During compilation, all the route will be stored in a place called RouteDictonary</li>
+            <li type="1">Now from Composer tab, enter the url (http://localhost:44391/api/demo/GetString) and execute the GET verb method</li>
+
+            <br>
+            <img src="images/image24.png" width="100%" height="100%" alt="image24">
+            <br><br>
+
+            <br>
+            <img src="images/image25.png" width="100%" height="100%" alt="image25">
+            <br><br>
+
+            <li type="1">now this time, we got 200 as server response code and got the output in json format</li>
+            <li type="1">now call the another method GetKeyWords from componse and we get the json out as: data1 data2</li>
+
+            <br>
+            <img src="images/image26.png" width="100%" height="100%" alt="image26">
+            <br><br>
+
+            <br>
+            <img src="images/image27.png" width="100%" height="100%" alt="image27">
+            <br><br>
+
+            <li type="1">Now since we have the Route for the method (GetMyName) as [Route ("api/Demo/GetString")]</li>
+            <li type="1">we need to access the method, only with name defined in route and not with actual method name</li>
+            <li type="1">if we call with actual method name we will get below error</li>
+            <li type="1">(error) No HTTP resource was found that matches the request URI 'http://localhost:44391/api/demo/GetMyName'</li>
+            <li type="1">information present in composer header: </li>
+            <li type="1">
+                User-Agent: Fiddler <br>
+                Host: localhost:44391 <br>
+                Content-type: application/json
+            </li>
+
+            <br>
+            <img src="images/image28.png" width="100%" height="100%" alt="image28">
+            <br><br>
+
+            <br>
+            <img src="images/image29.png" width="100%" height="100%" alt="image29">
+            <br><br>
+
+            <li type="1">from the url pattern (http://localhost:44391/api/demo/GetString) we can understand that (http://localhost:44391/api/demo)</li>
+            <li type="1">is mapped to the routeTemplate with api -> keyword followed by controller name (demo)</li>
+            <li type="1">routeTemplate: "api/{controller}/{id}"</li>
+            <li type="1">
+                config.Routes.MapHttpRoute( <br>
+                name: "DefaultApi", <br>
+                routeTemplate: "api/{controller}/{id}", <br>
+                defaults: new { id = RouteParameter.Optional } <br>
+            );
+            </li>
+            <li type="1">above is the classic routing mechanism that is followed in mvc and web api 1</li>
+            <li type="1">the advantage of web api 2 is attribute based route mechanism, </li>
+            <li type="1">only using this attribute based routing mechanism the route which we define in the methods are working</li>
+            <li type="1">route defined in the methods: [Route ("api/Demo/GetString")] </li>
+            <li type="1">now what is the big advantage of attribute based routing</li>
+            <li type="1">--> using attribute based routing simple versioning in the application can be achieved</li>
+            <li type="1">what ever may be the return type of the method, based on the content type defined in the client (json or xml)</li>
+            <li type="1">web api is returning the data which client is requesting</li>
+            <li type="1">formatter in webapi is responsible for doing this action</li>
+            <li type="1">both the methods that we have written in DemoController, are returning string and IEnumerable but using content type client is able 
+                to receive the required response</li>
+            
+            <br>
+            <img src="images/image30.png" width="70%" height="70%" alt="image30">
+            <br><br>
+
+            <li type="1">Now lets create a model (which is nothing but a type to define employee, employer, book etc)</li>
+            <li type="1">model folder (right click) add Class (book.cs) and Add</li>
+            <li type="1">lets create two properties (a) bookName and (b) authorName</li>
+            
+            <br>
+            <img src="images/image31.png" width="70%" height="70%" alt="image31">
+            <br><br>
+            
+            <li type="1">lets expose one more new service (create a new method, which will return the values of book)</li>
+            <li type="1">what ever value we get in the method, we are returning the same value</li>
+            <li type="1">to the top of method add corresponding verb followed by attribute routing</li>
+            <li type="1">FromBody: means it will convert the value in the body to the book attribute (details we can see in pipeline)</li>
+            <li type="1">Now run the application</li>
+            
+            <br>
+            <img src="images/image32.png" width="70%" height="70%" alt="image32">
+            <br><br>
+
+            <br>
+            <img src="images/image33.png" width="100%" height="100%" alt="image33">
+            <br><br>
+
+            <br>
+            <img src="images/image34.png" width="70%" height="70%" alt="image34">
+            <br><br>
+
+            <li type="1">when we run the application we will get the above error, because we have not passed the input values but trying to access the data</li>
+            <li type="1">when no data was entered, null was passed and hence the server response code is:500 which means the object is null</li>
+
+            <br>
+            <img src="images/image35.png" width="100%" height="100%" alt="image35">
+            <br><br>
+
+            <li type="1">500: internal server error</li>
+            <li type="1">200: success</li>
+            <li type="1">400: client side error (like page not found)</li>
+            <li type="1">in the request body of the componser, lets pass the values</li>
+            <li type="1">
+                { bookName: "Web API Basic", <br>
+                  authorName: "XYZ" }
+            </li>
+
+            <br>
+            <img src="images/image36.png" width="100%" height="100%" alt="image36">
+            <br><br>
+
+            <li type="1">now lets run the application and we should get the response</li>
+
+            <br>
+            <img src="images/image37.png" width="100%" height="100%" alt="image37">
+            <br><br>
+
+            <br>
+            <img src="images/image38.png" width="100%" height="100%" alt="image38">
+            <br><br>
+
+            <li type="1">Since the input is RequestBody, in webapi we are reading using [FromBody]</li>
+            <li type="1">public IEnumerable<string> GetBookName([FromBody] Book source)</li>
+            <li type="1">now lets see how the GetBookName() method can be written using web api 1</li>
+            <li type="1">instead of IEnumerable<string> we use the return type as HttpResponseMessage</li>
+            <li type="1">in web api 2, what ever be the return type string, int, IEnumerable<string> etc.. that type that will be returned to </li>
+            <li type="1">the client will be of type HttpResponseMessage</li>
+            <li type="1">just for coding flexibility, we are using the return type from service method as string, int, IEnumerable<string> etc.. </li>
+            <li type="1">so all the high level return types will be internally coverted to HttpResponseMessage and will be sent to client</li>
+            <li type="1">now coming to parameter: HttpRequestMessage will be the input to a service method</li>
+            <li type="1">the raw input (HttpRequestMessage) will be converted to [FromBody] and then from [FromBody] we convert to required objects</li>          
+            <li type="1">now lets create a HttpResponseMessage to return the data</li>
+            <li type="1">Request.CreateResponse will accept two parameters (a)HttpStatusCode (b)return value</li>
+            <li type="1">consider a scenario, when the bookName is not available we should not return HttpStatusCode.OK</li>
+            <li type="1">for that we can perform some validation</li>
+
+            <br>
+            <img src="images/image39.png" width="70%" height="70%" alt="image39">
+            <br><br>
+
+            <li type="1">lets run the application</li>
+
+            <br>
+            <img src="images/image40.png" width="70%" height="70%" alt="image40">
+            <br><br>
+
+            <br>
+            <img src="images/image41.png" width="70%" height="70%" alt="image41">
+            <br><br>
+
+            <li type="1">we have received the output that we have passed</li>
+            <li type="1">now lets removed bookName from RequestBody and pass only the authorName to the service method</li>
+
+            <br>
+            <img src="images/image42.png" width="70%" height="70%" alt="image42">
+            <br><br>
+
+            <br>
+            <img src="images/image43.png" width="70%" height="70%" alt="image43">
+            <br><br>
+
+            <li type="1">in raw data section we could see the error message (SomeErrorMessage: required values are missing) that we have given in the service method</li>
+            <li type="1">now in request header like content-type: application/json  (which means we are sending the content of RequestBody in the 
+                form of json to service method)</li>
+            <li type="1">similar to that we can use: accept: application/xml (we are telling that we need the request from service as xml)</li>
+
+            <br>
+            <img src="images/image44.png" width="70%" height="70%" alt="image44">
+            <br><br>
+
+            <br>
+            <img src="images/image45.png" width="70%" height="70%" alt="image45">
+            <br><br>
+
+            <li type="1">accept: application/xml, we have received the output in the form of xml</li>
+            <li type="1">the above is an old approach where we create a raw HttpResponseMessage and handleing exception in web api 1</li>
+            <li type="1">in web api2 they decided that, no need to create multiple Create request and objects (response) </li>
+            <li type="1">Request.CreateErrorResponse(HttpStatusCode.BadRequest, ...</li>
+            <li type="1">HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, data);</li>
+            <li type="1">just like a wrapper class, in web api 2 they have give as below, but the internal workking will be as above only</li>
+            <li type="1">web api 2, we are separating the code to create response object</li>
+            <li type="1">instead of HttpResponseMessage, we have IHttpActionResult as the return type</li>
+            <li type="1">unlike web api1 instead of HttpResponseMessage, we have IHttpActionResult as the return type</li>
+            <li type="1">instead of using Request.CreateErrorResponse(HttpStatusCode.BadRequest ... we can directly give BadRequest</li>
+            <li type="1">where the BadRequest would have been derived, from ApiController (parent class of web api2 controller)</li>
+            <li type="1">for all the status code the return is defined in web api2 eg. conflict, ambigious, forbidden etc..</li>
+            <li type="1">instead of creating a response object and and selecting the HttpStatusCode, we can directly give the HttpsStatus code</li>
+            <li type="1">for Ok the response code is 200 (success)</li>
+            <li type="1">object creation part is separated, this is the difference in web api 2</li>
+
+            <br>
+            <img src="images/image46.png" width="70%" height="70%" alt="image46">
+            <br><br>
+
+            <li type="1">run the application</li>
+            <li type="1">call the service method v2 using composer, and pass the data in RequestBody (for a valid data)</li>
+
+            <br>
+            <img src="images/image47.png" width="70%" height="70%" alt="image47">
+            <br><br>
+
+            <br>
+            <img src="images/image48.png" width="70%" height="70%" alt="image48">
+            <br><br>
+
+            <li type="1">response for invalid / missing data</li>
+            <li type="1">we get the response code as 400</li>
+
+            <br>
+            <img src="images/image49.png" width="70%" height="70%" alt="image49">
+            <br><br>
+
+            <br>
+            <img src="images/image50.png" width="70%" height="70%" alt="image50">
+            <br><br>
+
+            <br>
+            <img src="images/image51.png" width="70%" height="70%" alt="image51">
+            <br><br>
+
+            <li type="1">we could see the error message that was returned from the service method</li>
+            <li type="1">in the above basic demo we have seen how to read an input, return output, what is content negotiation</li>
+            <li type="1">with the above knowledge, lets understand web api pipeline</li>
+
+            <br>
+            <img src="images/image52.png" width="70%" height="70%" alt="image52">
+            <br><br>
+
+            <li type="1">till now what we have done is we are using fiddler as http client</li>
+            <li type="1">the web api logic is written in controller, we submit the request and we receive the response from web api</li>
+            <li type="1">before going futher we need to understand http protocol</li>
+            <li type="1">http protocol has two sections header and request body, header contains the input and output type</li>
+            <li type="1">where as request body contains the input values</li>
+
+            <br>
+            <img src="images/image53.png" width="70%" height="70%" alt="image53">
+            <br><br>
+
+            <li type="1">1:07:00</li>
+            <li type="1">Http reference: https://www.youtube.com/watch?v=pHFWGN-upGM</li>
+            <li type="1">Parts of an HTTP request</li>
+
+            <br>
+            <img src="images/image54.png" width="70%" height="70%" alt="image54">
+            <br><br>
+
+            <li type="1">the fundamental part of understanding restful api is understanding the flow of HTTP</li>
+            <li type="1">HTTP can be described as the pull protocol</li>
+            <li type="1">communication is always initiated by the client, which sends HTTP request to the server</li>
+            <li type="1">inturn the server responds with the response message</li>
+            <li type="1">these messages are just bytes of text, which machine converts into images, text, multimedia components</li>
+            <li type="1">lets discuss the major compoents of http request and response</li>
+            <li type="1">every HTTP request consists of a message header and an optional message body, separated by blank line</li>
+
+            <br>
+            <img src="images/image55.png" width="70%" height="70%" alt="image55">
+            <br><br>
+
+            <li type="1">the two entities header and (optional) body are separated by space</li>
+            <li type="1">in HTTP request the first line of the header is called request line</li>
+            <li type="1">HTTP request line consists of:</li>
+            <li type="1">--> HTTP Verb</li>
+            <li type="1">--> URI (uniform resource identifier)</li>
+            <li type="1">--> HTTP version number</li>
+            <li type="1">the below are examples of HTTP request line</li>
+
+            <br>
+            <img src="images/image56.png" width="70%" height="70%" alt="image56">
+            <br><br>
+
+            <li type="1">the verbs are: GET, POST, DELETE</li>
+            <li type="1">the resource that we are going to access are the URI (/home.html, /index.html)</li>
+            <li type="1">the version of http at the end</li>
+            <li type="1">after the request line, we have optional request headers</li>
+
+            <br>
+            <img src="images/image57.png" width="70%" height="70%" alt="image57">
+            <br><br>
+
+            <li type="1">In optional request headers, we can define specific properties about our request/li>
+            <li type="1">request headers appear in name:value pairs</li>
+            <li type="1">multiple values can be separated by commas</li>
+            <li type="1">a blank lines spearates the header and body of the HTTP request</li>
+
+            <br>
+            <img src="images/image58.png" width="70%" height="70%" alt="image58">
+            <br><br>
+
+            <li type="1">in the body we can add any other information about the request, that we want to send along with the server</li>
+            <li type="1">an example of complete HTTP message is shown here</li>
+
+            <br>
+            <img src="images/image59.png" width="70%" height="70%" alt="image59">
+            <br><br>
+
+            <li type="1">now lets go back to our web api learning</li>
+            <li type="1">with the existing knowlede about web api we can understand the pipeline of webapi</li>
+
+            <br>
+            <img src="images/image60.png" width="70%" height="70%" alt="image60">
+            <br><br>
+
+            <li type="1">now we will have a doubt that, how the input parameter is getting mapped, how the output is converted and received by client as json and xml</li>
+
+            <br>
+            <img src="images/image61.png" width="70%" height="70%" alt="image61">
+            <br><br>
+
+            <li type="1">in the request the first end point is IIS Server or SelfHost</li>
+            <li type="1">what ever request we give from client (which ever device if may be) the request will first reach IIS Server (rare scenario is selfhost, which we are not discussing here)</li>
+            <li type="1">request reaching IIS means it is reaching a web server</li>
+            <li type="1">IIS on receiving the request will transfer the raw request to HTTP server (ie. the clients raw request will directly go to Http Server (using IIS)</li>
+            <li type="1">So HttpServer is internally handling the raw request</li>
+            <li type="1">work of HTTPServer:</li>
+            <li type="1">--> the raw request that we receive from HTML/client will be coverted to HttpRequestMessage object</li>
+            <li type="1">--> the incoming uri, query string data etc, will be converted as a HttpRequestMessage object</li>
+            <li type="1">--> so the output of HTTPServer, will be an objectof type (HttpRequestMessage) which will pass from HTTPServer to WebAPI Controller</li>
+            <li type="1">--> in short the raw http request will be coverted to HttpRequestMessage object by HTTPServer</li>
+            <li type="1">in code (at WebAPI Controller) we will be reading the HttpRequestMessage and the output from (WebAPI Controller) will be HttpResponseMessage
+                to HTTPServer
+            </li>
+            <li type="1">again HTTPServer dispatches the HttpResponseMessage to client using IIS Server</li>
+            <li type="1">so when the response goes out the last end point is HttpServer</li>
+            <li type="1">now lets understand this some more in detail</li>
+
+            <br>
+            <img src="images/image62.png" width="70%" height="70%" alt="image62">
+            <br><br>
+
+            <li type="1">Summary till now: </li>
+            <li type="1">--> Give from client (which ever device if may be) the request will first reach IIS Server</li>
+            <li type="1">--> IIS on receiving the request will transfer the raw request to HTTP server (ie. the clients raw request will directly go to Http Server (using IIS)</li>
+            <li type="1">--> HttpServer is internally handling the raw request (the incoming uri, header, form-body query string data etc) will be converted as a HttpRequestMessage object)</li>
+            <li type="1">--> so the output of HTTPServer, will be an objectof type (HttpRequestMessage) which will pass from HTTPServer to WebAPI Controller</li>
+            
+            <li type="1">till now HttpServer has converted the incoming raw request (header, form-body query string data etc) to HttpRequestMessage object</li>
+            <li type="1">the HttpResponseMessage object will directly come to (Routing Selector)</li>
+            <li type="1">Route Selector is nothing but the below selected Default Route in WebApiConfig.cs page in Register() method</li>
+
+            <br>
+            <img src="images/image63.png" width="70%" height="70%" alt="image63">
+            <br><br>
+
+            <li type="1">if this code is commented: config.MapHttpAttributeRoutes();</li>
+            <li type="1">then the attribute based routing code which we defined on top of the method will not work</li>
+            <li type="1"> example below: <br>
+                [HttpPost] <br>
+                [Route("api/Demo/GetBookNameAPIv2")] <br>
+                public IHttpActionResult GetBookNameApi2([FromBody] Book source) <br>
+                { .. <br>
+                }    <br>
+            </li>
+            <li type="1">in the code we can see that first we have registered
+                (a) attribute based routing and
+                (b) then we have registered classic routing
+            </li>
+            <li type="1">we can change the order, but the problem is if url pattern matches any page then it will be mapped to that route</li>
+            <li type="1">so with RouteSelector, it can now identify the HttpRequestMessage object should go to which controller and which method</li>
+            <li type="1">the next step in the pipeline is: based on the Controller Name and Method Name, </li>
+            <li type="1">--> controller will be made as an object</li>
+            <li type="1">--> and then it will be activated: this is done by a component (Controller Selector and activator) component</li>
+            <li type="1">recap: </li>
+            <li type="1">--> raw request is comming, which will be converted to HttpRequestMessage</li>
+            <li type="1">--> based on the url pattern, route will be selected (which will help to identify the controller and method)</li>
+            <li type="1">--> controller object will be created and activated and call will go to that controller</li>
+            <li type="1">the above is a simple outline of the process, lets see the next steps below</li>
+
+            <br>
+            <img src="images/image64.png" width="70%" height="70%" alt="image64">
+            <br><br>
+
+            <li type="1">Now the Controller Selector and activator will call an another component called: (Model Binding)</li>
+            <li type="1">see the below eg: we are passing the parameter and mapping to the source to Book</li>
+            <li type="1">ie. we take the data from formBody and map it an object (source) which is of type
+                Book [Creating a source object of type Book], this part is happening in (Controller Selector and Activator) component</li>
+            <li type="1">once the controller is activated, the parameter assignment happens in (Model Binding) ie. [FromBody] Book source</li>
+
+            <br>
+            <img src="images/image65.png" width="70%" height="70%" alt="image65">
+            <br><br>
+
+            <li type="1">now controller is activated, the data for ModelBinding is loaded from (HttpRequestMessage)</li>
+            <li type="1">ModelBinding, receives the parameter data from</li>
+            <li type="1">--> URI</li>
+            <li type="1">--> FromBody</li>
+            <li type="1">--> Header (by writing custom code, to be discussed later)</li>
+            <li type="1">ie.) once the controller is activated, before going to the controller using (ModelBinding) component, the 
+                required parameter are created using URL, FromBody, Header</li>
+            <li type="1">the order is:</li>
+            <li type="1">(a) route is first selected: [Route("api/Demo/GetBookNameAPIv2")]</li>
+            <li type="1">(b) next the required method is activated: public IHttpActionResult GetBookNameApi2(...</li>
+            <li type="1">(c) then the parameters required for the methods are now created: ... GetBookNameApi2([FromBody] Book source)</li>
+            <li type="1">now the request reaches the web api controller and the logic that we have written inside the method gets activated</li>
+            <li type="1">so now the controller will return the resultset (in pipeline is it called as an component called: ResultConversion)</li>
+            <li type="1">the work of ResultConversion is: whatever value the controller method returns the response will be sent as (HttpResponseMessage) by the (Controller Selector and Activator) component</li>
+            <li type="1">all these are inbuilt components and we will not be making any changes to the pipeline components</li>
+            <li type="1">the next part to see is: Custom Extension</li>
+            <li type="1">1:13:51</li>
+
+            <br>
+            <img src="images/image66.png" width="70%" height="70%" alt="image66">
+            <br><br>           
+
+            <li type="1">Previously we have seen the existing compoents of the pipeline, now we are going to see how we can customize the pipeline</li>
+            <li type="1">the big disadvantage is consider the below example: where we get 500 response from the server</li>
+
+            <br>
+            <img src="images/image67.png" width="70%" height="70%" alt="image67">
+            <br><br>
+
+            <li type="1">Here we can explicitly see the error in raw tab, this is an unhandled exception where the code is explicitely visible</li>
+            <li type="1">what is written in a particular row and line number, error should never be thrown unhandled</li>
+            <li type="1">for that we need to see how we can handled the error globally which is called Global Exception Handling</li>
+            <li type="1">Authentication/Authorization: Eg: when a web api is pubicly hosted, any body can connect and get the data. Which should not be the case.
+                There should be a valid user name and password
+            </li>
+            <li type="1">Only user who give proper user name and password will be allowed to get the data from web api</li>
+            <li type="1">to handle the username and password we can go and write check in each method by passing user name and password as parameters 
+                to check the given password information (Authentication information) is correct or not
+            </li>
+            <li type="1">Authorization: Eg: only a user with manager role should call this method, eg: if login user is a super user then the access will be 
+                available for the followng methods
+            </li>
+            <li type="1">The authorization and authentication information can be done in custom exception section</li>
+            <li type="1">Logging: all the incomming request weather it is a valid or invalid request</li>
+            <li type="1">in the pipeline we have seen from HttpServer the request comes to Routing Selector, in the HttpServer it self before coming
+                to Routing Selector we need to check (Authenticate) and return the request if it is not valid</li>
+
+            <br>
+            <img src="images/image68.png" width="70%" height="70%" alt="image68">
+            <br><br>
+
+            <li type="1">Consider an example, where we do not want to receive request from a particular country-region (Eg: UK-EMEA) </li>
+            <li type="1">All the geo specific filters can be handled before the control reaches (Routing Selector) component</li>
+            <li type="1">Using Logging concept we can validate the incoming request before it reaches Routing Selector component</li>
+            <li type="1">If a login is common for all the controllers, in the pipeline we have extensions for each of the component</li>
+            <li type="1">the below screen explains the avaiable extension to us</li>
+
+            <br>
+            <img src="images/image69.png" width="70%" height="70%" alt="image69">
+            <br><br>
+
+            <li type="1">initially we have seen that request comes from IIS Server to HTTP Server, in HTTP Server the HTTPRequestMessage will be created, which then
+                will be passed to Routing Selector component
+            </li>
+            <li type="1">once the HTTPRequestMessage is created it will not directly go to Routing, in between (HTTP Server) and (Routing Selector) we have a component
+                called (Delegate Handler)
+            </li>
+            <li type="1">Delegate Handler: (working) if any delegate Handler is present in the pipeline it will execute it, if the logic we introduced 
+                in Delegate Handler is not satisfied then we can return the request from Delegate Handler to Http Server
+            </li>
+            <li type="1">if our logic in Delegate Handler is satisfied (everythis is correct eg: geo-country validation), then only the request will 
+                move from (Delegate Handler) to (Routing Selector)</li>
+            <li type="1">Now how can we add our custom logic to (Delegate Handler), we need to go to the pipeline (WebApiConfig.cs) file</li>
+
+            <br>
+            <img src="images/image70.png" width="70%" height="70%" alt="image70">
+            <br><br>
+
+            <li type="1">above the line //Web API routes add the line config.Delegates.Add(give the className), now this class will be added to the delegate</li>
+            <li type="1">How it works: Http Server component will check if there are any Delegate components mapped, if mapped the logic will be executed</li>
+            <li type="1">based on the logic the control will either return back or proceed further in the pipeline to the next component</li>
+            <li type="1">Note: we can call the Delegate Handler or (extension point) of HTTP Server as HttpMessageHandler</li>
+            <li type="1">--> this is the first custom entry for all the web API requests</li>
+            <li type="1">--> if the custom logic is not satisfied then we can stop the request in pipeline and return the response from here</li>
+
+            <br>
+            <img src="images/image71.png" width="70%" height="70%" alt="image71">
+            <br><br>
+
+            <li type="1">Now that in Delegate Handler (Extension Point) the custom logic is validated and identified to be a valid request (Passed)</li>
+            <li type="1">Now the control will come to route selector, the above Delegate Handler was written common to all</li>
+            <li type="1">Next after the Route Selector is execuited we have another checkpoint, to check if the RouteSelector component has a 
+                dediated (Route Delegate Handler)
+            </li>
+            <li type="1">if available (exist), that particular Route Delegate Handler will work</li>
+            <li type="1">In this Route Delegate Handler, we can have our own logic, (if our logical conditions are not satisfied) we can return the request 
+                back to Http Server as (invalid request)
+            </li>
+            <li type="1">if there is not route specific contoller, then our request will directly go to (Controller Selector and Activator) component</li>
+            <li type="1">We can see how we can write the extensions which we have seen above (Delegate Handler) and (Route Delegate Handler)</li>
+            <li type="1">In all the previous examples, which we have seen is basically we will create a controller, call from the client</li>
+            <li type="1">in short in controller we will write only the domain/business logic and only the response will be returned back</li>
+            <li type="1">the above what we have seen, for that we will not write the code in controller, we will be writing the code specific to routes</li>
+            <li type="1">we will see further on how the request flows from (Controller Selector and Activator) component</li>
+
+            <br>
+            <img src="images/image72.png" width="70%" height="70%" alt="image72">
+            <br><br>
+
+            <li type="1">After (Controller Selector and Activator) is passed, the next filter to fire is: (Authentication Filter)</li>
+            <li type="1">In later code we will see, how we can write authentication filter</li>
+            <li type="1">once the (Authentication Filter) is fired then (Authorization Filter) will next be fired</li>
+            <li type="1">(Authorization Filter) will be called before (Model Binding) component, what will happen is it will take the form url, the passing parameters</li>
+            <li type="1">(Authorization Filter) if therer are any un-authorized user, the request will be sent back to the (Controller Selector and Activator) component</li>
+            <li type="1">if the user is an authorized user, then request will flow to (Model Binding) component and from there it will move to (Action Filter) component</li>
+            <li type="1">After the model binding is execuited, parameters will be mapped</li>
+            <li type="1">1:21:20</li>
+            <li type="1">Lets see the full recap:</li>
+            <li type="1">Request is comming, from (HttpClient), </li>
+            <li type="1">(a) IIS Server: it will first reach (IIS Server)</li>
+            <li type="1">(b) Http Server: From (IIS Server) it will reach the first entry point, here the raw header, query string will be converted to strongly typed object</li>
+            <li type="1">--> strongly typed object messages means, they are converted to (HTTPRequestMessage) </li>
+            <li type="1">(c) Delegate Handler: now the control moves to (Delegate Handler) which will try to identify if there is any common logic</li>
+            <li type="1">--> if there is any common logic then it will be execuited</li>
+            <li type="1">(d) Route Selector: if the request is valid then the control will flow to route selector, here the (Route Selector) will chec if there is any
+                custom logic implemented here
+            </li>
+            <li type="1">(e) Control Selector and activator: If (Route Selector) does not have custom logic then the flow moves to (Control Selector and Activator)</li>
+            <li type="1">(f) Authentication Filter: From Control Selector and Activator, it will check if there is any Authentication performed or not</li>
+            <li type="1">(g) Authorization Filter: If any (Authentication) logic is implemented and its response is true, the control will move to (Authorization Filter)</li>
+            <li type="1">(h) Model Binding: If the result of (Authorization Filter) is true/passed then only the control will move to (Model Binding)</li>
+            <li type="1">--> when the control comes out of (Model Binding) the parameter would have been mapped</li>
+            <li type="1">--> when parameter gets mapped, the original domain logic/business logic will get execuited</li>
+
+            <br>
+            <img src="images/image73.png" width="70%" height="70%" alt="image73">
+            <br><br>
+
+            <li type="1">--> before the business logic gets execuited, once the parameters get mapped to the service controller 
+                method (in Model Binding component) and before the business logic get execuited</li>
+            <li type="1">--> if we want to write some code, then we have a component called (Action Filter - [OnActionExecuting/OnActionExecuted])</li>
+            <li type="1">(i) Action Filter - [OnActionExecuting/OnActionExecuted]: Once the parameters get mapped to the service 
+                method (in Model Binding component) and before the business logic get execuited</li>
+            <li type="1">--> between this if we want to introduce any custom logic then Action Filters can be used</li>
+            <li type="1">--> this Action Filter has two methods (a) OnActionExecuting and (b) OnActionExecuted</li>
+            <li type="1">(j) OnActionExecuting: will be called before the execuition of the business login in service controller method (in short: once the 
+                parameter gets mapped, we want to execute a set of code, then in that case we need to use the (Action Filter),
+                which has an event called OnActionExecuting 
+            </li>
+            <li type="1">--> this event gets fired, before the execuition of the controller service method</li>
+            <li type="1">--> when this (OnActionExecuting) gets execuited (i.e. when the execuition is completed, what ever business logic we have written
+                in the controller service method, will get execuited (refer above image, part of the code which is rounded)
+            </li>
+            <li type="1">(k) OnActionExecuted: Once our business logic is executed and return value is set then (OnActionExected) will be called</li>
+            <li type="1">So the summary is, before we execute the business logic of Controller Service method, if we need to execute a set of code for all the 
+                Controller Service method we can do it (and it is possible), this code need to be written in OnActionExected method
+            </li>
+            <li type="1">after the execuition of our business logic (in Controller Service method), if we want to execute a common set of code then 
+                it can be written in (OnActionExecuted)
+            </li>
+            <li type="1">once the code of (OnActionExecuted), which is part of (Action Filter), will now move to (Result Conversion)</li>
+
+            <br>
+            <img src="images/image74.png" width="70%" height="70%" alt="image74">
+            <br><br>
+
+            <li type="1">(l) Result Conversion: What ever may be the Result Conversion type, it will be converted to (HttpResponseMessage) type</li>
+            <li type="1">--> From WebAPI, we may sent the return type as string, int, boolean, IEnumerable etc.. but when it comes to (Result Conversion) it
+                will be converted to (HttpResponseMessage) of the type we need (json/xml) output
+            </li>
+            <li type="1">(m) Authorization Filter: from (Result Conversion) it will got Authorization Filter</li>
+
+            <br>
+            <img src="images/image75.png" width="70%" height="70%" alt="image75">
+            <br><br>
+
+            <li type="1">--> the above process was for the normal data flow, we will now see in case of an exception</li>
+            <li type="1">(n) Exception Filter: Globally to handle all the error we need to write/use a filter of type (Exception Filter)</li>
+            <li type="1">--> Exception filter will be fired, when there is an error</li>
+            <li type="1">--> first it will check if there is any try..catch block</li>
+            <li type="1">--> if there is no local try..catch block then it will go to Exception filter, execute the common code and it will go out 
+                to (Authentication Filter)</li>
+
+            <br>
+            <img src="images/image76.png" width="70%" height="70%" alt="image76">
+            <br><br>
+
+
+            <li type="1">In the pipeline we can see that, (Result Conversion) and (Model Binding) are having a star, because they are inbult component given by the WebAPI</li>
+            <li type="1">--> Model Binding, will be mapped from uri, header etc.. in addition we can also write our custom logic </li>
+            <li type="1">--> Result Conversion: is also an inbuilt component of WebAPI, here also we can write our custom logic</li>
+            <li type="1">All GREEN boxes in image are basic components given by WebAPI</li>
+            <li type="1">GREEN box will star, represents the in the basic component we can also write our own extension code</li>
+            <li type="1">ORANGE boxes, we will be writing the code from the scratch there is no dependency</li>
+            <li type="1">if the above pipeline is well understood we can do any thing in webapi</li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+            <li type="1"></li>
+        </ou>>
+    </div>
+</body>
+</html>
